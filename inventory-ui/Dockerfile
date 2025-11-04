@@ -1,6 +1,0 @@
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
-COPY . .
-RUN sed -i 's#location / {#location / {\n        try_files $uri $uri/ /index.html;#' /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
