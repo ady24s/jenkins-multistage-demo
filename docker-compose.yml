@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  api:
+    build: ./inventory-api
+    container_name: inventory-api
+    ports:
+      - "5000:5000"
+
+  ui:
+    build: ./inventory-ui
+    container_name: inventory-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
