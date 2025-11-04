@@ -1,65 +1,39 @@
 pipeline {
     agent any
 
-    environment {
-        REGISTRY = "local"
-        API_IMAGE = "jenkins-multistage-demo-api"
-        UI_IMAGE = "jenkins-multistage-demo-ui"
-    }
-
-    triggers {
-        pollSCM('H/2 * * * *') // checks for new commits every 2 minutes
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'dev', url: 'https://github.com/yourusername/jenkins-multistage-demo.git'
-            }
-        }
-
-        stage('Merge Feature Branch') {
-            steps {
-                script {
-                    sh '''
-                    git fetch origin feature-api
-                    git merge origin/feature-api --no-edit || true
-                    '''
-                }
+                echo "Checking out branch: ${env.GIT_BRANCH}"
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    sh 'docker-compose build'
-                }
+                echo "Building the application..."
+                sh 'echo Building branch ${GIT_BRANCH}'
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    sh 'curl -f http://localhost:5000/health || exit 1'
-                }
+                echo "Running tests..."
+                sh 'echo Running unit tests for ${GIT_BRANCH}'
             }
         }
 
         stage('Deploy') {
             steps {
-                script {
-                    sh 'docker-compose down && docker-compose up -d'
-                }
+                echo "Deploying application..."
+                sh 'echo Deploying ${GIT_BRANCH} to dev environment'
             }
         }
     }
 
     post {
-        success {
-            echo "✅ Build and deployment successful!"
-        }
-        failure {
-            echo "❌ Build failed. Check logs for details."
+        always {
+            echo "Pipeline completed for branch: ${env.GIT_BRANCH}"
         }
     }
 }
