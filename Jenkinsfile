@@ -4,36 +4,36 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo "Checking out branch: ${env.GIT_BRANCH}"
+                echo 'Checking out branch: origin/dev'
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building the application..."
-                sh 'echo Building branch ${GIT_BRANCH}'
+                echo 'Building the application...'
+                bat 'echo Simulating build process'
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running tests..."
-                sh 'echo Running unit tests for ${GIT_BRANCH}'
+                echo 'Running tests...'
+                bat 'echo Simulating test execution'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploying application..."
-                sh 'echo Deploying ${GIT_BRANCH} to dev environment'
+                echo 'Deploying application...'
+                bat 'echo Simulating deployment'
             }
         }
     }
 
     post {
         always {
-            echo "Pipeline completed for branch: ${env.GIT_BRANCH}"
+            echo "Pipeline completed for branch: ${env.BRANCH_NAME}"
         }
     }
 }
